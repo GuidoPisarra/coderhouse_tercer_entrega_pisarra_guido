@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,10 +55,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "tercer_entrega.urls"
 
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(settings.BASE_DIR, "AppTercerEntrega", "template")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
