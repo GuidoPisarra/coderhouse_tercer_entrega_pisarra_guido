@@ -125,4 +125,11 @@ STATIC_URL = "static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
+# Ruta al directorio de archivos estáticos
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# Rutas de los directorios donde se encuentran los archivos estáticos de cada aplicación
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "AppTercerEntrega", "static"),
+]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

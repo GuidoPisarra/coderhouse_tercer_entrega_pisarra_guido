@@ -21,21 +21,42 @@
 </head>
 
 <body>
-  <!-- Navigation-->
-  <nav class="navbar navbar-light bg-light static-top">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">Home</a>
 
-    </div>
-  </nav>
-  <!-- Masthead-->
-  <header class="masthead">
-    <div class="container position-relative">
-      <div class="row justify-content-center">
-        <h1 class="text-center" style="color: white">Tercer Entrega</h1>
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Coderhouse</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Ingresar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Registrarme</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
       </div>
     </div>
-  </header>
+  </nav>
+
+  <div>
+    <h1 class="text-center" style="margin-top: 1rem; margin-bottom:1rem;">Tercer Entrega</h1>
+
+  </div>
+
 
   <!-- INICIO Contenido -->
 
@@ -47,29 +68,20 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
-          <ul class="list-inline mb-2">
-            <li class="list-inline-item"><a href="#!">About</a></li>
-            <li class="list-inline-item">⋅</li>
-            <li class="list-inline-item"><a href="#!">Contact</a></li>
-            <li class="list-inline-item">⋅</li>
-            <li class="list-inline-item"><a href="#!">Terms of Use</a></li>
-            <li class="list-inline-item">⋅</li>
-            <li class="list-inline-item"><a href="#!">Privacy Policy</a></li>
-          </ul>
           <p class="text-muted small mb-4 mb-lg-0">
-            &copy; Your Website 2023. All Rights Reserved.
+            &copy; Coderhouse - Curso Python. Pisarra Guido deechos reservados.
           </p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
           <ul class="list-inline mb-0">
             <li class="list-inline-item me-4">
-              <a href="#!"><i class="bi-facebook fs-3"></i></a>
+              <a href="#!" target="_blank"><i class="bi-facebook fs-3"></i></a>
             </li>
             <li class="list-inline-item me-4">
-              <a href="#!"><i class="bi-twitter fs-3"></i></a>
+              <a href="https://github.com/GuidoPisarra" target="_blank"><i class="bi-github fs-3"></i></a>
             </li>
             <li class="list-inline-item">
-              <a href="#!"><i class="bi-instagram fs-3"></i></a>
+              <a href="#!" target="_blank"><i class="bi-instagram fs-3"></i></a>
             </li>
           </ul>
         </div>
@@ -79,7 +91,7 @@
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Core theme JS-->
-  <script src="js/scripts.js"></script>
+  <script src="{% static 'AppTercerEntrega/js/scripts.js' %}"></script>
   <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
   <!-- * *                               SB Forms JS                               * *-->
   <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->

@@ -22,6 +22,5 @@ from AppTercerEntrega import views
 
 urlpatterns = [
     path("", views.home, name="home"),  # Ruta raíz que muestra la vista home
-    path("admin/", admin.site.urls),
     path("AppTercerEntrega/", include("AppTercerEntrega.urls")),
 ]

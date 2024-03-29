@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+
+
+<main>
+    <div class="container col-md-6">
+        <form class="row g-3 needs-validation" action="register_user" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-6">
+                <label for="validationCustom01" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="validationCustom01" value="" placeholder="Nombre"
+                    name="nombre" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom02" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="validationCustom02" value="" name="apellido"
+                    placeholder="Apellido" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="validationCustomUsername" class="form-label">Email</label>
+                <div class="input-group has-validation">
+                    <input type="email" class="form-control" id="validationCustomUsername" name="email"
+                        aria-describedby="emailHelp" placeholder="E-mail" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese un email válido.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom02" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="validationCustom02" value="" name="contrasenia"
+                    placeholder="Contraseña" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="validationCustomUsername" class="form-label">Imagen</label>
+                <input type="file" class="form-control" aria-label="file example" name="imagen">
+                <div class="invalid-feedback">Example invalid form file feedback</div>
+            </div>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="es_profesor" value="False" id="btnradio1" autocomplete="off"
+                    checked>
+                <label class="btn btn-outline-primary" for="btnradio1">Alumno</label>
+
+                <input type="radio" class="btn-check" name="es_profesor" value="True" id="btnradio2" autocomplete="off">
+                <label class="btn btn-outline-primary" for="btnradio2">Profesor</label>
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Registrarse</button>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+{% endblock %}
