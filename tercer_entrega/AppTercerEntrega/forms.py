@@ -6,5 +6,16 @@ class Formulario_registro(forms.Form):
     apellido = forms.CharField(max_length=100)
     email = forms.EmailField()
     contrasenia = forms.CharField(widget=forms.PasswordInput())
-    es_profesor = forms.BooleanField()
+    es_profesor = forms.ChoiceField(choices=[("True", "Profesor"), ("False", "Alumno")])
     imagen = forms.ImageField(required=False)
+
+
+class Formulario_ingreso(forms.Form):
+    email = forms.EmailField()
+    contrasenia = forms.CharField(widget=forms.PasswordInput())
+
+
+class Formulario_agregar_curso(forms.Form):
+    nombre_curso = forms.CharField(max_length=100)
+    camada = forms.IntegerField()
+    email = forms.EmailField()

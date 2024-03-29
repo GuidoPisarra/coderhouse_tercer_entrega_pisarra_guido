@@ -32,7 +32,7 @@ class Usuario(models.Model):
         return check_password(contrasenia_texto_plano, self.contrasenia)
 
     def __str__(self):
-        return self.nombre
+        return f"Nombre: {self.nombre} Apellido: {self.apellido} Email {self.email} Profesor {self.es_profesor} Cursos: {self.cursos} Imagen: {self.imagen}"
 
 
 class Calificacion(models.Model):
@@ -42,4 +42,4 @@ class Calificacion(models.Model):
     calificacion = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.alumno} - Curso: {self.curso.nombre} - Calificación: {self.calificacion}"
+        return f"{self.usuario} - Curso: {self.curso.nombre} - Calificación: {self.calificacion}"

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+
+
+<main>
+    <div class="container col-md-12">
+        <h1 class="my-4 text-center text-lg-left">Profesor</h1>
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+
+                    <img src="{% static  usuario.imagen  %}}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Apellido y nombre: {{usuario.apellido}} {{usuario.nombre}}</h5>
+                        <p class="card-text">Email: {{usuario.email}}</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Mis cursos</h2>
+                    <ul class="list-group">
+                        {% for curso in cursos %}
+                        <a class="list-group-item" href="{% url 'detalle_curso_profesor' curso.id usuario.email %}">
+                            <li style="list-style: none;">{{curso.nombre}}</li>
+                        </a>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h2>Agregar Curso</h2>
+                    <form class="row g-3 needs-validation" action="agregar_curso" method="POST">
+                        {% csrf_token %}
+                        <div class="col-md-12">
+                            <label for="validationCustomUsername" class="form-label">Nombre</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" id="" name="nombre_curso"
+                                    placeholder="Nombre curso" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="validationCustom02" class="form-label">Número de Comisión</label>
+                            <input type="number" class="form-control" id="numero_comision_agregar" value="1"
+                                name="camada" placeholder="Nro. comisión" required min="1">
+                        </div>
+                        <input type="text" class="form-control" id="numero_comision_agregar" value="{{usuario.email}}"
+                            name="email" hidden>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+{% endblock %}

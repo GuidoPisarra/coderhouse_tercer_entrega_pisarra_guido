@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+
+
+<main>
+    <div class="container col-md-12">
+        <h1 class="my-4 text-center text-lg-left">Alumno</h1>
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+
+                    <img src="{{ MEDIA_URL }}{{ usuario.imagen }}" class="img-fluid rounded-start" alt="...">
+
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Apellido y nombre: {{usuario.apellido}} {{usuario.nombre}}</h5>
+                        <p class="card-text">Email: {{usuario.email}}</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Mis cursos</h2>
+                    <ul class="list-group">
+                        {% for curso in cursos %}
+                        <a class="list-group-item" href="{% url 'detalle_curso_profesor' curso.id usuario.email %}">
+                            <li style="list-style: none;">{{curso.nombre}}</li>
+                        </a>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h2>Cursos Disponibles</h2>
+                    <ul class="list-group">
+                        {% for curso in cursos_totales %}
+                        {% if curso not in cursos_totales %}
+                        <div class="list-group-item" style="display: flex; justify-content: space-between;">
+
+                            <li style="list-style: none;">{{ curso.nombre }}</li>
+                            <form action="{% url 'curso_inscripcion' curso.id usuario.email %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success"
+                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Inscribirme</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}
