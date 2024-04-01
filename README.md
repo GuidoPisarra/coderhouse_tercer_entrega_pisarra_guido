@@ -44,4 +44,16 @@ Dentro de usuario implemente "validar_contraseña" que será utilizado al moment
 dobrecargue el método save() para poder guardar la contraeña encriptadad, ya que en clase no se explicó como guardar los usuarios
 en la tabla de usuarios que viene por defecto en Django.
 
+##USUARIOS :
 
+guidito10@gmail.com , pass --> guido (alumno)
+eldiez@gmail.com , pass --> diego (profesor)
+
+##PROFESOR
+El profesor puede crear materias y calificar alumnos.
+Para esto ultimo, deberá ingresar en el listado de mis cursos, seleccionar una materia.
+Una vez hecho esto aparecera un listado de alumnos, los cuales podrá calificar poniendo la nota en el input y presionando calificar
+También podrá buscar alumnos por apellido desde la barra de buscar alumnos.
+
+##ALUMNO
+El alumno podrá ver su lista de cursos asignados, donde podrá inscribirse a un curso.
