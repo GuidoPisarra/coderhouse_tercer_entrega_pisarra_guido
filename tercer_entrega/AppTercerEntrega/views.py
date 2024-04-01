@@ -6,6 +6,8 @@ from django.template import loader
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 # Create your views here.
 
@@ -34,7 +36,12 @@ def user_login(request):
                     return render(request, "profesor.html", {"cursos": cursos})
                 else:
                     cursos = usuario.cursos.all()
-                    return render(request, "alumno.html", {"cursos": cursos})
+                    cursos_disponibles = Curso.objects.all()
+                    return render(
+                        request,
+                        "alumno.html",
+                        {"cursos": cursos, "cursos_disponibles": cursos_disponibles},
+                    )
             else:
                 return render(
                     request,
@@ -87,6 +94,7 @@ def register(request):
         return render(request, "register.html", {"form": Formulario_registro()})
 
 
+@login_required
 def agregar_curso(request):
     if request.method == "POST":
         mi_formulario = Formulario_agregar_curso(request.POST, request.FILES)
@@ -94,10 +102,14 @@ def agregar_curso(request):
             datos = mi_formulario.cleaned_data
             nuevo_curso = Curso(nombre=datos["nombre_curso"], camada=datos["camada"])
             nuevo_curso.save()
-            usuario = Usuario.objects.get(email__iexact=datos["email"])
-            usuario.cursos.add(nuevo_curso)
-            cursos = usuario.cursos.all()
 
+            # Obtener el usuario autenticado
+            usuario = request.user.usuario
+
+            # Agregar el nuevo curso al usuario
+            usuario.cursos.add(nuevo_curso)
+
+            cursos = usuario.cursos.all()
             return render(request, "profesor.html", {"cursos": cursos})
         else:
             print("Formulario inválido")
@@ -109,12 +121,11 @@ def agregar_curso(request):
                 {"error": ["Ocurrió un error al registrar el curso."]},
             )
     else:
-        return render(request, "profesor.html", {"cursos": usuario.cursos})
+        return render(request, "profesor.html")
 
 
-def detalle_curso_profesor(request, id, email):
+def detalle_curso_profesor(request, id):
     curso = Curso.objects.get(id=id)
-    usuario = Usuario.objects.get(email=email)
     alumnos_en_curso = curso.usuario_set.all()
 
     """ cursos = Curso.objects.all()
@@ -124,7 +135,6 @@ def detalle_curso_profesor(request, id, email):
     return HttpResponse(documento) """
 
     print(curso)
-    print(usuario)
     print(alumnos_en_curso)
 
     return render(
@@ -133,15 +143,16 @@ def detalle_curso_profesor(request, id, email):
     )
 
 
-def curso_inscripcion(request, id, email):
+def curso_inscripcion(request, id):
     curso = Curso.objects.get(id=id)
-    usuario = Usuario.objects.get(email=email)
-    cursos = usuario.cursos.all()
-    cursos_totales = Curso.objects.all()
 
-    print(curso)
-    print(usuario)
+    cursos_totales = Curso.objects.all()
+    usuario = request.user.usuario
+    # Agregar el nuevo curso al usuario
     usuario.cursos.add(curso)
+    cursos = usuario.cursos.all()
+    print(curso)
+
     return render(
         request,
         "alumno.html",
@@ -151,3 +162,8 @@ def curso_inscripcion(request, id, email):
             "cursos_totales": cursos_totales,
         },
     )
+
+
+def custom_logout(request):
+    logout(request)
+    return render(request, "base.html")

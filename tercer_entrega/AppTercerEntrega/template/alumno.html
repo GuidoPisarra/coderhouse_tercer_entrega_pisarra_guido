@@ -31,7 +31,7 @@
                     <h2>Mis cursos</h2>
                     <ul class="list-group">
                         {% for curso in cursos %}
-                        <a class="list-group-item" href="{% url 'detalle_curso_profesor' curso.id usuario.email %}">
+                        <a class="list-group-item" href="{% url 'detalle_curso_profesor' curso.id %}">
                             <li style="list-style: none;">{{curso.nombre}}</li>
                         </a>
                         {% endfor %}
@@ -41,15 +41,17 @@
                     <h2>Cursos Disponibles</h2>
                     <ul class="list-group">
                         {% for curso in cursos_disponibles %}
+                        {% if curso not in cursos %}
                         <div class="list-group-item" style="display: flex; justify-content: space-between;">
 
                             <li style="list-style: none;">{{ curso.nombre }}</li>
-                            <form action="{% url 'curso_inscripcion' curso.id usuario.email %}" method="POST">
+                            <form action="{% url 'curso_inscripcion' curso.id  %}" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-success"
                                     style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Inscribirme</button>
                             </form>
                         </div>
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 </div>

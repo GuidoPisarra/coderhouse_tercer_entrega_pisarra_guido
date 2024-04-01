@@ -30,7 +30,7 @@
                     <h2>Mis cursos</h2>
                     <ul class="list-group">
                         {% for curso in cursos %}
-                        <a class="list-group-item" href="{% url 'detalle_curso_profesor' curso.id usuario.email %}">
+                        <a class="list-group-item" href="{% url 'detalle_curso_profesor' curso.id %}">
                             <li style="list-style: none;">{{curso.nombre}}</li>
                         </a>
                         {% endfor %}
@@ -52,8 +52,7 @@
                             <input type="number" class="form-control" id="numero_comision_agregar" value="1"
                                 name="camada" placeholder="Nro. comisión" required min="1">
                         </div>
-                        <input type="text" class="form-control" id="numero_comision_agregar" value="{{usuario.email}}"
-                            name="email" hidden>
+
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Agregar</button>
                         </div>

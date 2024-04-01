@@ -18,4 +18,3 @@ class Formulario_ingreso(forms.Form):
 class Formulario_agregar_curso(forms.Form):
     nombre_curso = forms.CharField(max_length=100)
     camada = forms.IntegerField()
-    email = forms.EmailField()
