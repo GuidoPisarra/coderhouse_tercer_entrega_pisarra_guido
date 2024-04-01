@@ -7,18 +7,18 @@
 
 <main>
     <div class="container col-md-6">
-        <form class="row g-3 needs-validation" action="login" method="POST">
+        <form class="row g-3 needs-validation" action="user_login" method="POST">
             {% csrf_token %}
             <div class="col-md-12">
                 <label for="validationCustomUsername" class="form-label">Email</label>
                 <div class="input-group has-validation">
-                    <input type="email" class="form-control" id="" name="email" aria-describedby="emailHelp"
+                    <input type="email" class="form-control" id="" name="username" aria-describedby="emailHelp"
                         placeholder="E-mail" required>
                 </div>
             </div>
             <div class="col-md-12">
                 <label for="validationCustom02" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="" value="" name="contrasenia" placeholder="Contraseña"
+                <input type="password" class="form-control" id="" value="" name="password" placeholder="Contraseña"
                     required>
             </div>
 

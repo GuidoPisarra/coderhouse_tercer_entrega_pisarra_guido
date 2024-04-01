@@ -5,14 +5,14 @@ class Formulario_registro(forms.Form):
     nombre = forms.CharField(max_length=100)
     apellido = forms.CharField(max_length=100)
     email = forms.EmailField()
-    contrasenia = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput())
     es_profesor = forms.ChoiceField(choices=[("True", "Profesor"), ("False", "Alumno")])
     imagen = forms.ImageField(required=False)
 
 
 class Formulario_ingreso(forms.Form):
-    email = forms.EmailField()
-    contrasenia = forms.CharField(widget=forms.PasswordInput())
+    username = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput())
 
 
 class Formulario_agregar_curso(forms.Form):

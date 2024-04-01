@@ -21,6 +21,7 @@ from django.urls import path, include
 from AppTercerEntrega import views
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path("", views.home, name="home"),  # Ruta raíz que muestra la vista home
     path("AppTercerEntrega/", include("AppTercerEntrega.urls")),
 ]

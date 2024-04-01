@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from AppTercerEntrega.models import *
+from AppTercerEntrega.forms import *
 from django.http import HttpResponse
 from django.template import loader
-
-from AppTercerEntrega.forms import *
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -15,64 +16,65 @@ def home(request):
 
 
 # Ingresar como usuario
-def login(request):
+def user_login(request):
     if request.method == "POST":
-        mi_formulario = Formulario_ingreso(request.POST)
-
-        if mi_formulario.is_valid():
-            datos = mi_formulario.cleaned_data
-            try:
-                usuario = Usuario.objects.get(email__iexact=datos["email"])
-            except Usuario.DoesNotExist:
-                usuario = None
-            if usuario and usuario.validar_contraseña(datos["contrasenia"]):
-                cursos = usuario.cursos.all()
+        form = AuthenticationForm(request, request.POST)
+        print("llega")
+        if form.is_valid():
+            print("pasa")
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                usuario = Usuario.objects.get(user=user)
                 if usuario.es_profesor:
-                    return render(
-                        request,
-                        "profesor.html",
-                        {"usuario": usuario, "cursos": cursos},
-                    )
+                    cursos = usuario.cursos.all()
+
+                    return render(request, "profesor.html", {"cursos": cursos})
                 else:
-                    cursos_totales = Curso.objects.all()
-                    return render(
-                        request,
-                        "alumno.html",
-                        {
-                            "usuario": usuario,
-                            "cursos": cursos,
-                            "cursos_totales": cursos_totales,
-                        },
-                    )
+                    cursos = usuario.cursos.all()
+                    return render(request, "alumno.html", {"cursos": cursos})
             else:
                 return render(
                     request,
                     "login.html",
-                    {"error": ["Usuario o contraseña incorrectos."]},
+                    {"form": form, "error": "Usuario o contraseña incorrectos."},
                 )
+        else:
+            print("El formulario no es válido")
+            print(form.errors)
     else:
-        return render(request, "login.html")
+        form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})
 
 
-# Creación de usuario
 def register(request):
     if request.method == "POST":
         mi_formulario = Formulario_registro(request.POST, request.FILES)
         if mi_formulario.is_valid():
-            print("Formulario válido")
             datos = mi_formulario.cleaned_data
-            print("Datos recibidos:", datos)
-            usuario = Usuario(
-                nombre=datos["nombre"],
-                apellido=datos["apellido"],
+            nuevo_usuario = User.objects.create_user(
+                username=datos["email"],
                 email=datos["email"],
-                contrasenia=datos["contrasenia"],
-                es_profesor=datos["es_profesor"],
-                imagen=request.FILES.get("imagen"),
+                password=datos["password"],
             )
-            usuario.save()
+            nuevo_usuario.first_name = datos["nombre"]
+            nuevo_usuario.last_name = datos["apellido"]
+            nuevo_usuario.save()
+
+            # Crear instancia UserProfile asociada al nuevo usuario
+            nuevo_userprofile = Usuario.objects.create(user=nuevo_usuario)
+
+            # Asignar imagen si se proporcionó
+            imagen = mi_formulario.cleaned_data.get("imagen")
+            if imagen:
+                nuevo_userprofile.imagen = imagen
+                nuevo_userprofile.save()
+
             return render(request, "login.html")
         else:
+            # Manejar el caso en que el formulario no sea válido
             print("Formulario inválido")
             print("Errores:", mi_formulario.errors)
             print("Datos:", mi_formulario.cleaned_data)
@@ -82,7 +84,7 @@ def register(request):
                 {"error": ["Ocurrió un error al registrar el usuario."]},
             )
     else:
-        return render(request, "register.html")
+        return render(request, "register.html", {"form": Formulario_registro()})
 
 
 def agregar_curso(request):

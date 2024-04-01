@@ -40,8 +40,7 @@
                 <div class="col-md-6">
                     <h2>Cursos Disponibles</h2>
                     <ul class="list-group">
-                        {% for curso in cursos_totales %}
-                        {% if curso not in cursos_totales %}
+                        {% for curso in cursos_disponibles %}
                         <div class="list-group-item" style="display: flex; justify-content: space-between;">
 
                             <li style="list-style: none;">{{ curso.nombre }}</li>
@@ -51,7 +50,6 @@
                                     style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Inscribirme</button>
                             </form>
                         </div>
-                        {% endif %}
                         {% endfor %}
                     </ul>
                 </div>

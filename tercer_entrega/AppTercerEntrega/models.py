@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -15,24 +16,18 @@ class Curso(models.Model):
 
 
 class Usuario(models.Model):
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    email = models.EmailField()
-    contrasenia = models.CharField(max_length=128)  # Encripta si el objeto es nuevo
-    cursos = models.ManyToManyField(Curso)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     es_profesor = models.BooleanField(default=False)
-    imagen = models.FileField(upload_to="files/imagenes")
+    imagen = models.ImageField(upload_to="files/imagenes", blank=True, null=True)
+    cursos = models.ManyToManyField(Curso, related_name="alumnos", blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # Encripta la contraseña si el objeto es nuevo
-            self.contrasenia = make_password(self.contrasenia)
+        # Actualizar el campo es_profesor según si el usuario es superusuario
+        self.es_profesor = self.user.is_superuser
         super().save(*args, **kwargs)
 
-    def validar_contraseña(self, contrasenia_texto_plano):
-        return check_password(contrasenia_texto_plano, self.contrasenia)
-
     def __str__(self):
-        return f"Nombre: {self.nombre} Apellido: {self.apellido} Email {self.email} Profesor {self.es_profesor} Cursos: {self.cursos} Imagen: {self.imagen}"
+        return f"Id: {self.id} Nombre: {self.nombre} Apellido: {self.apellido} Email {self.email} Profesor {self.es_profesor} Cursos: {self.cursos} Imagen: {self.imagen}"
 
 
 class Calificacion(models.Model):
