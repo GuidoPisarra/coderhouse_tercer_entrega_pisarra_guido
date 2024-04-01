@@ -23,11 +23,11 @@ class Usuario(models.Model):
 
     def save(self, *args, **kwargs):
         # Actualizar el campo es_profesor según si el usuario es superusuario
-        self.es_profesor = self.user.is_superuser
+        self.user.is_superuser = self.es_profesor
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Id: {self.id} Nombre: {self.nombre} Apellido: {self.apellido} Email {self.email} Profesor {self.es_profesor} Cursos: {self.cursos} Imagen: {self.imagen}"
+        return f"Id: {self.user_id} Imagen: {self.imagen} "
 
 
 class Calificacion(models.Model):

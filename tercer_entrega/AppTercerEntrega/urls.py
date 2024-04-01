@@ -18,4 +18,5 @@ urlpatterns = [
         name="detalle_curso_profesor",
     ),
     path("logout/", views.custom_logout, name="logout"),
+    path("calificar", views.calificar, name="calificar"),
 ]

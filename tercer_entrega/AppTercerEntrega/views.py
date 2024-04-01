@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from AppTercerEntrega.models import *
 from AppTercerEntrega.forms import *
-from django.http import HttpResponse
-from django.template import loader
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -21,9 +19,7 @@ def home(request):
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
-        print("llega")
         if form.is_valid():
-            print("pasa")
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(request, username=username, password=password)
@@ -33,29 +29,59 @@ def user_login(request):
                 if usuario.es_profesor:
                     cursos = usuario.cursos.all()
 
-                    return render(request, "profesor.html", {"cursos": cursos})
+                    return render(
+                        request,
+                        "profesor.html",
+                        {"cursos": cursos, "usuario": user, "imagen": usuario.imagen},
+                    )
                 else:
                     cursos = usuario.cursos.all()
                     cursos_disponibles = Curso.objects.all()
+
                     return render(
                         request,
                         "alumno.html",
-                        {"cursos": cursos, "cursos_disponibles": cursos_disponibles},
+                        {
+                            "cursos": cursos,
+                            "cursos_disponibles": cursos_disponibles,
+                            "usuario": user,
+                            "imagen": usuario.imagen,
+                        },
                     )
             else:
                 return render(
                     request,
                     "login.html",
-                    {"form": form, "error": "Usuario o contraseña incorrectos."},
+                    {
+                        "form": form,
+                        "error": ["Usuario o contraseña incorrectos."],
+                        "mensaje": [],
+                    },
                 )
         else:
-            print("El formulario no es válido")
-            print(form.errors)
+            return render(
+                request,
+                "login.html",
+                {
+                    "form": form,
+                    "error": ["Usuario o contraseña incorrectos."],
+                    "mensaje": [],
+                },
+            )
     else:
         form = AuthenticationForm()
-    return render(request, "login.html", {"form": form})
+        return render(
+            request,
+            "login.html",
+            {
+                "form": form,
+                "error": [],
+                "mensaje": [],
+            },
+        )
 
 
+# Registrar usuario
 def register(request):
     if request.method == "POST":
         mi_formulario = Formulario_registro(request.POST, request.FILES)
@@ -88,12 +114,16 @@ def register(request):
             return render(
                 request,
                 "register.html",
-                {"error": ["Ocurrió un error al registrar el usuario."]},
+                {
+                    "error": ["Ocurrió un error al registrar el usuario."],
+                    "mensaje": [],
+                },
             )
     else:
         return render(request, "register.html", {"form": Formulario_registro()})
 
 
+# Agregar curso, con el decorador @login_required me aseguro que el usuario este logueado
 @login_required
 def agregar_curso(request):
     if request.method == "POST":
@@ -118,41 +148,36 @@ def agregar_curso(request):
             return render(
                 request,
                 "profesor.html",
-                {"error": ["Ocurrió un error al registrar el curso."]},
+                {
+                    "error": ["Ocurrió un error al registrar el curso."],
+                },
             )
     else:
         return render(request, "profesor.html")
 
 
+# ver del detalle del curso desde profesor
 def detalle_curso_profesor(request, id):
     curso = Curso.objects.get(id=id)
-    alumnos_en_curso = curso.usuario_set.all()
 
-    """ cursos = Curso.objects.all()
-    diccionario = {"cursos": cursos}
-    plantilla = loader.get_template("cursos.html")
-    documento = plantilla.render(diccionario)
-    return HttpResponse(documento) """
-
-    print(curso)
-    print(alumnos_en_curso)
+    usuarios_inscritos = Usuario.objects.filter(cursos=curso)
+    usuarios_auth_user = User.objects.filter(usuario__in=usuarios_inscritos)
 
     return render(
         request,
         "detalle_curso_profesor.html",
+        {"curso": curso, "usuarios_inscritos": usuarios_auth_user},
     )
 
 
+# inscripcion del alumno a un curso
 def curso_inscripcion(request, id):
     curso = Curso.objects.get(id=id)
-
     cursos_totales = Curso.objects.all()
     usuario = request.user.usuario
     # Agregar el nuevo curso al usuario
     usuario.cursos.add(curso)
     cursos = usuario.cursos.all()
-    print(curso)
-
     return render(
         request,
         "alumno.html",
@@ -164,6 +189,62 @@ def curso_inscripcion(request, id):
     )
 
 
+# desloguear al usuario
 def custom_logout(request):
     logout(request)
     return render(request, "base.html")
+
+
+def calificar(request):
+    if request.method == "POST":
+        mi_formulario = Formulario_calificar(request.POST)
+        if mi_formulario.is_valid():
+            datos = mi_formulario.cleaned_data
+            curso = Curso.objects.get(nombre=datos["curso"])
+            usuarios_inscritos = Usuario.objects.filter(cursos=curso.id)
+            usuarios_auth_user = User.objects.filter(usuario__in=usuarios_inscritos)
+            datos = mi_formulario.cleaned_data
+            curso = Curso.objects.get(nombre=datos["curso"])
+            usuario = Usuario.objects.get(id=datos["id_alumno"])
+            calificacion = datos["calificacion"]
+            nueva_calificacion = Calificacion(
+                curso=curso,
+                usuario=usuario,
+                descripcion="",
+                calificacion=calificacion,
+            )
+            nueva_calificacion.save()
+            texto = "La calificacción fue guardada con éxito."
+            return render(
+                request,
+                "detalle_curso_profesor.html",
+                {
+                    "curso": curso,
+                    "usuarios_inscritos": usuarios_auth_user,
+                    "error": [],
+                    "mensaje": [texto],
+                },
+            )
+        else:
+            usuarios_inscritos = Usuario.objects.filter(cursos=curso)
+            usuarios_auth_user = User.objects.filter(usuario__in=usuarios_inscritos)
+            curso = Curso.objects.get(nombre=request.POST["curso"])
+            return render(
+                request,
+                "detalle_curso_profesor.html",
+                {
+                    "curso": curso,
+                    "usuarios_inscritos": usuarios_auth_user,
+                    "error": ["Ocurrió un error al calificar al alumno."],
+                    "mensaje": [],
+                },
+            )
+    else:
+        usuarios_inscritos = Usuario.objects.filter(cursos=curso)
+        usuarios_auth_user = User.objects.filter(usuario__in=usuarios_inscritos)
+        curso = Curso.objects.get(nombre=curso)
+        return render(
+            request,
+            "detalle_curso_profesor.html",
+            {"curso": curso, "usuarios_inscritos": usuarios_auth_user},
+        )

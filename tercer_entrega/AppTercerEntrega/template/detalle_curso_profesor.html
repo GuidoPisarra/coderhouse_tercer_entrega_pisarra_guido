@@ -7,8 +7,31 @@
 
 <main>
     <div class="container col-md-12">
-        <h1 class="my-4 text-center text-lg-left">Detalle</h1>
+        <h1 class="my-4 text-center text-lg-left">{{curso.nombre}}</h1>
+        <a href="{% url 'user_login' %}" class="btn btn-primary my-4">Volver</a>
+        <ul>
+            {% for alumno in usuarios_inscritos %}
+            {% if not alumno.is_superuser %}
+            <form class="container" action="{% url 'calificar' %}" method="POST" class="d-flex align-items-center">
+                {% csrf_token %}
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <li> {{alumno.last_name |upper}} {{alumno.first_name|title}}</li>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="number" min="1" name="calificacion" class="form-control">
+                        <input type="text" name="curso" value="{{curso.nombre}}" class="form-control" hidden>
+                        <input type="number" name="id_alumno" value="{{alumno.id}}" class="form-control" hidden>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-success" type="submit">Calificar</button>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+            {% endfor %}
+        </ul>
     </div>
 
 </main>
