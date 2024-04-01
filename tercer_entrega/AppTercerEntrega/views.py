@@ -17,6 +17,7 @@ def home(request):
 
 # Ingresar como usuario
 def user_login(request):
+
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
