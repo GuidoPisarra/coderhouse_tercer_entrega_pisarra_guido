@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.db.models import Q
 
 # Create your views here.
 
@@ -249,3 +250,15 @@ def calificar(request):
             "detalle_curso_profesor.html",
             {"curso": curso, "usuarios_inscritos": usuarios_auth_user},
         )
+
+
+def buscar_alumno(request):
+    if request.GET["alumno"]:
+        name = request.GET["alumno"]
+        alumno = User.objects.filter(
+            Q(first_name__icontains=name) | Q(last_name__icontains=name)
+        )
+
+        if alumno is not None:
+            print(alumno)
+        return render(request, "resultado_busqueda_alumno.html", {"alumnos": alumno})

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<main>
+    <div class="container col-md-8">
+        {% if not alumnos %}
+        <h1>No se ha encontrado el usuario solicitado.</h1>
+        {% endif %}
+        {% for alu in alumnos %}
+        
+        <div class="card mb-3">
+            <div class="row g-0">
+
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Apellido y nombre: {{alu.last_name |upper}} {{alu.first_name |title}}</h5>
+                        <p class="card-text">Email: {{alu.email}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</main>
+
+{% endblock %}
